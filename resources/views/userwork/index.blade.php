@@ -16,13 +16,15 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($userWorks as $userWork)
                     <tr>
-                        <td><!-- 日を表示 --></td>
-                        <td>10:00</td>
-                        <td>19:00</td>
-                        <td>1:00</td>
-                        <td>1:00</td>
+                        <td>{{ $userWork->work_time }}</td>
+                        <td>{{ $userWork->start_time }}</td>
+                        <td>{{ $userWork->end_time }}</td>
+                        <td>{{ $userWork->break_time }}</td>
+                        <td>{{ $userWork->over_time }}</td>
                     </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
