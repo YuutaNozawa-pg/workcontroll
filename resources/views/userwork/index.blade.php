@@ -17,12 +17,12 @@
                 </thead>
                 <tbody>
                     @foreach ($userWorks as $userWork)
-                    <tr>
+                    <tr class="form-group">
                         <td>{{ $userWork->work_time }}</td>
-                        <td>{{ $userWork->start_time }}</td>
-                        <td>{{ $userWork->end_time }}</td>
-                        <td>{{ $userWork->break_time }}</td>
-                        <td>{{ $userWork->over_time }}</td>
+                        <td><input class="form-control" type="text" value="{{ $userWork->start_time }}"></td>
+                        <td><input class="form-control" type="text" value="{{ $userWork->end_time }}"></td>
+                        <td><input class="form-control" type="text" value="{{ $userWork->break_time }}"></td>
+                        <td><input class="form-control" type="text" value="{{ $userWork->over_time }}"></td>
                     </tr>
                     @endforeach
                 </tbody>

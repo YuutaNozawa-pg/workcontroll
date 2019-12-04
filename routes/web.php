@@ -21,4 +21,5 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/', 'UserWorkController@index');
+Route::get('/userwork/index', 'UserWorkController@index');
+Route::get('/userwork/list', 'UserWorkController@list');

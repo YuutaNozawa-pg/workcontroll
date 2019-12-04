@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\UserWork;
+use App\Http\Requests\UserWorkRequest;
 use Carbon\Carbon;
 use App\Utility\Convert;
 
@@ -15,7 +16,7 @@ class UserWorkController extends Controller
         $this->userWork = new UserWork();
     }
 
-    public function index()
+    public function index(UserWorkRequest $request)
     {
         $userWorks = $this->userWork->getUserWorks();
 
@@ -26,7 +27,6 @@ class UserWorkController extends Controller
             $breakTime = new Carbon($time->break_time);
             $workTime = new Carbon($time->work_time);
 
-            $time->work_time = $workTime->month;
             $time->start_time = Convert::getHourJoinMinute($startTime->hour, $startTime->minute);
             $time->end_time = Convert::getHourJoinMinute($endTime->hour, $endTime->minute);
             $time->over_time = Convert::getHourJoinMinute($overTime->hour, $overTime->minute);
@@ -35,5 +35,10 @@ class UserWorkController extends Controller
         }
 
         return view('userwork.index', compact('userWorks'));
+    }
+
+    public function list()
+    {
+        return view('userwork.list');
     }
 }
