@@ -7,6 +7,7 @@ use App\UserWork;
 use App\Http\Requests\UserWorkRequest;
 use Carbon\Carbon;
 use App\Utility\Convert;
+use Log;
 
 class UserWorkController extends Controller
 {
@@ -34,11 +35,26 @@ class UserWorkController extends Controller
 
         }
 
-        return view('userwork.index', compact('userWorks'));
+        $current = new Carbon();
+
+        $current->month = $request->month;
+
+        return view('userwork.index', compact('userWorks', 'current'));
+    }
+
+    public function update(UserWorkRequest $request)
+    {
+        Log::debug($request->all());
+        return redirect('/userwork/index');
     }
 
     public function list()
     {
-        return view('userwork.list');
+        $currentYear = new Carbon();
+
+        //今年の取得
+        $year = $currentYear->year;
+
+        return view('userwork.list', compact('year'));
     }
 }

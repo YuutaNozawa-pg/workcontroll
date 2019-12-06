@@ -8,8 +8,12 @@
             <form method="GET" action="{{ url('/userwork/index') }}">
                 @csrf
 
-                @for ($i = 0; $i < 14; $i++)
-                    <input type="submit" name="id" value="{{ $i }}">
+                @for ($i = 1; $i < 13; $i++)
+                    <div class="list-group">
+                        <button name="month" value="{{ $i }}" class="list-group-item list-group-item-action">
+                            {{ $year }}/{{ $i }}
+                        </button>
+                    </div>
                 @endfor
             </form>
         </div>

@@ -16,7 +16,7 @@ class CreateUserWorks extends Migration
         Schema::create('user_works', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('user_id');
-            $table->datetime('work_time');
+            $table->date('work_time');
             $table->datetime('start_time');
             $table->datetime('end_time');
             $table->datetime('over_time');

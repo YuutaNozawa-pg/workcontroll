@@ -24,7 +24,7 @@ class UserWorkRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['required', 'integer', 'min:1', 'max:12']
+            'month' => ['required', 'integer', 'min:1', 'max:12']
         ];
     }
 }
