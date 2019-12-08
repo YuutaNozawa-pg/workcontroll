@@ -23,4 +23,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/userwork/index', 'UserWorkController@index');
 Route::get('/userwork/list', 'UserWorkController@list');
+Route::post('/userwork/create', 'UserWorkController@create');
 Route::post('/userwork/update', 'UserWorkController@update');

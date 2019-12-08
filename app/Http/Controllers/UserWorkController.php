@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\UserWork;
+use App\Eloquents\UserWork;
 use App\Http\Requests\UserWorkRequest;
 use Carbon\Carbon;
 use App\Utility\Convert;
@@ -19,7 +19,11 @@ class UserWorkController extends Controller
 
     public function index(UserWorkRequest $request)
     {
-        $userWorks = $this->userWork->getUserWorks();
+        
+        $current = new Carbon();
+        $current->month = $request->month;
+        
+        $userWorks = $this->userWork->findUserWorksByYearAndMonth($current->year, $current->month);
 
         foreach ($userWorks as $time) {
             $startTime = new Carbon($time->start_time);
@@ -35,16 +39,64 @@ class UserWorkController extends Controller
 
         }
 
-        $current = new Carbon();
-
-        $current->month = $request->month;
-
         return view('userwork.index', compact('userWorks', 'current'));
     }
 
-    public function update(UserWorkRequest $request)
+    public function update(Request $request)
     {
-        Log::debug($request->all());
+        $convertTime = new Carbon('today');
+        $year = $request->year;
+        $month = $request->month;
+
+        
+        $userWorks = $this->userWork->findUserWorksByYearAndMonth($year, $month);
+
+        if (count($userWorks) == 0) {
+            return redirect('/userwork/index');
+        }
+        
+        $time = [];
+
+        for ($i = 0; $i < count($request->start_time); $i++) {
+            $time[$i]["id"] = $request->id[$i];
+            $time[$i]["work_time"] = $year . '/' . $month . '/' . $request->day[$i];
+            $time[$i]["start_time"] = $convertTime->toDateString() . ' ' . $request->start_time[$i] . ':00';
+            $time[$i]["end_time"] = $convertTime->toDateString() . ' ' . $request->end_time[$i] . ':00';
+            $time[$i]["break_time"] = $convertTime->toDateString() . ' ' . $request->break_time[$i] . ':00';
+            $time[$i]["over_time"] = $convertTime->toDateString() . ' ' . $request->over_time[$i] . ':00';
+        }
+
+        $this->userWork->updateUserWork($time);
+
+        return redirect('userwork/index');
+    }
+
+    public function create(Request $request)
+    {
+        $convertTime = new Carbon('today');
+        $year = $request->year;
+        $month = $request->month;
+
+        $userWorks = $this->userWork->findUserWorksByYearAndMonth($year, $month);
+
+        //year、monthに該当するレコードが見つかったらindexにリダイレクト
+        if (count($userWorks) != 0) {
+            return redirect('/userwork/index');
+        }
+
+        $time = [];
+
+        for ($i = 0; $i < count($request->start_time); $i++) {
+            $time[$i]["work_time"] = $year . '/' . $month . '/' . $request->day[$i];
+            $time[$i]["start_time"] = $convertTime->toDateString() . ' ' . $request->start_time[$i] . ':00';
+            $time[$i]["end_time"] = $convertTime->toDateString() . ' ' . $request->end_time[$i] . ':00';
+            $time[$i]["break_time"] = $convertTime->toDateString() . ' ' . $request->break_time[$i] . ':00';
+            $time[$i]["over_time"] = $convertTime->toDateString() . ' ' . $request->over_time[$i] . ':00';
+        }
+
+        $this->userWork->createUserWork($time);
+
+
         return redirect('/userwork/index');
     }
 
