@@ -4,8 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserWorks extends Migration
+class CreateUserWorkListsTable extends Migration
 {
+    private $table = 'user_work_lists';
     /**
      * Run the migrations.
      *
@@ -13,14 +14,10 @@ class CreateUserWorks extends Migration
      */
     public function up()
     {
-        Schema::create('user_works', function (Blueprint $table) {
+        Schema::create($this->table, function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('user_id');
-            $table->date('work_time');
-            $table->datetime('start_time');
-            $table->datetime('end_time');
-            $table->datetime('over_time');
-            $table->datetime('break_time');
+            $table->integer('user_id')->default(0)->nullable();
+            $table->datetime('date');
             $table->timestamps();
         });
     }
@@ -32,6 +29,6 @@ class CreateUserWorks extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_works');
+        Schema::dropIfExists($this->table);
     }
 }

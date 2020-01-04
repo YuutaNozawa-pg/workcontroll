@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Web\UserWork\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserWorkRequest extends FormRequest
+class IndexUserWorkRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +23,11 @@ class UserWorkRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'month' => ['required', 'integer', 'min:1', 'max:12']
-        ];
+        return [];
+    }
+
+    public function convert()
+    {
+        return collect([]);
     }
 }

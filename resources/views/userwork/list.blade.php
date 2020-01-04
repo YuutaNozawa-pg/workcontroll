@@ -1,22 +1,13 @@
 @extends('layouts.app')
 
-
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <form method="GET" action="{{ url('/userwork/index') }}">
-                @csrf
-
-                @for ($i = 1; $i < 13; $i++)
-                    <div class="list-group">
-                        <button name="month" value="{{ $i }}" class="list-group-item list-group-item-action">
-                            {{ $year }}/{{ $i }}
-                        </button>
-                    </div>
-                @endfor
-            </form>
-        </div>
-    </div>
-</div>
+    <form action="/userwork" method="POST">
+        @csrf
+        <button type="submit" class="btn btn-primary float-right">作成</button>
+    </form>
+    <ul class="list-group mt-5">
+        @foreach ($userWorkList as $userWork)
+            <li class="list-group-item"><a href="/userwork/{{ $userWork->id }}">{{ $userWork->date->format('Y年m月') }}</a></li>
+        @endforeach
+    </ul>
 @endsection

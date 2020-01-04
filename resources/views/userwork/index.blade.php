@@ -1,99 +1,95 @@
 @extends('layouts.app')
 
-
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <form class="form-action" method="POST" action="{{ url('userwork/update') }}">
-                @csrf
-                <input type="hidden" name="year" value="{{ $current->year }}">
-                <button name="month" value="{{ $current->month }}" class="btn btn-outline-primary" type="submit" >更新</button>
-                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modal-timesheet">一括入力</button>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <td>{{ $current->year }}</td>
-                            <td>出勤</td>
-                            <td>退勤</td>
-                            <td>休憩</td>
-                            <td>残業</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for ($i = 1; $i <= $current->daysInMonth; $i++)
-                            <tr class="form-group">
-                                <input type="hidden" name="day[]" value="{{ $i }}">
-                                <td>{{ $current->month }}/{{ $i }}</td>
-                                @if (count($userWorks) != 0) 
-                                    <input type="hidden" name="id[]" value="{{ $userWorks[$i - 1]['id'] }}">
-                                    <td><input name="start_time[]" class="input-start form-control" type="text" value="{{ $userWorks[$i - 1 ]['start_time'] }}"></td>
-                                    <td><input name="end_time[]" class="input-end form-control" type="text" value="{{ $userWorks[$i - 1 ]['end_time'] }}"></td>
-                                    <td><input name="break_time[]" class="input-break form-control" type="text" value="{{ $userWorks[$i - 1 ]['break_time'] }}"></td>
-                                    <td><input name="over_time[]" class="input-over form-control" type="text" value="{{ $userWorks[$i - 1 ]['over_time'] }}"></td>
-                                @else
-                                    <td><input name="start_time[]" class="input-start form-control" type="text" value=""></td>
-                                    <td><input name="end_time[]" class="input-end form-control" type="text" value=""></td>
-                                    <td><input name="break_time[]" class="input-break form-control" type="text" value=""></td>
-                                    <td><input name="over_time[]" class="input-over form-control" type="text" value=""></td>
-                                @endif
-                            </tr>
-                        @endfor
-                    </tbody>
-                </table>
-            </form>
+  <div class="float-left">
+    現在の年月：{{ $userWorkList->date->format('Y年m月') }}
+  </div>
 
-            <div class="modal fade" id="modal-timesheet" tabindex="-1" role="dialog" aria-labelledby="label1" aria-hiddden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4>一括入力出来ます</h4>
-                        </div>
-                        <div class="modal-body">
-                            <ul style="list-style: none;">
-                                <li>出勤<input class="bulk-input-start" type="text"></li>
-                                <li>退勤<input class="bulk-input-end" type="text"></li>
-                                <li>休憩<input class="bulk-input-break" type="text"></li>
-                                <li>残業<input class="bulk-input-over" type="text"></li>
-                            </ul>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="bulk-input-button btn btn-outline-primary" data-dismiss="modal">一括更新する</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <form action="/userwork/download" method="POST" class="m-0">
+    @csrf
+    <button type="submit" class="btn btn-primary float-right">CSV</button>
+  </form>
+  
+  <button type="button" class="btn btn-primary float-right mr-3" data-toggle="modal" data-target="#modal1">
+    一括入力
+  </button>
+  <div class="modal fade" id="modal1" tabindex="-1"
+        role="dialog" aria-labelledby="label1" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="label1">一括で入力することが出来ます</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
+        <div class="modal-body">
+          <ul>
+            <li>始業<input type="text" name="bulk-start-time" value=""></li>
+            <li>定時<input type="text" name="bulk-end-time" value=""></li>
+            <li>休憩<input type="text" name="bulk-break-time" value=""></li>
+            <li>残業<input type="text" name="bulk-over-time" value=""></li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+          <button type="button" class="bulk-input btn btn-primary">一括入力する</button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
+
+  <form action="/userwork" method="POST" class="m-0">
+    @method('PUT')
+    @csrf
+
+    <button type="submit" class="btn btn-primary float-right mr-3">更新</button>
+
+    <div class="table-responsive">
+        <table class="table table-bordered text-center mt-3">
+          <thead>
+            <tr>
+              <th>日</th>
+              <th>始業</th>
+              <th>定時</th>
+              <th>休憩</th>
+              <th>残業</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach ($userWorks as $userWork)
+            <tr>
+              <input class="userwork-id" type="hidden" name="id[]" value="{{ $userWork->id }}">
+              <td>{{ $userWork->day }}</td>
+              <td><input class="start-time" type="text" name="start_time[]" value=""></td>
+              <td><input class="end-time" type="text" name="end_time[]" value=""></td>
+              <td><input class="break-time" type="text" name="break_time[]" value=""></td>
+              <td><input class="over-time" type="text" name="over_time[]" value=""></td>
+            </tr>
+            @endforeach
+          </tbody>
+        </table>
+    </div>
+
+  </form>
 @endsection
 
-<script type="text/javascript">
-window.onload = function() {
-    bulkInput();
+<script>
+window.onload = function () {
 
-    function bulkInput() {
-        $('.bulk-input-button').on('click', function() {
-            const startTime = $('.bulk-input-start').val();
-            const endTime = $('.bulk-input-end').val();
-            const breakTime = $('.bulk-input-break').val();
-            const overTime = $('.bulk-input-over').val();
-
-            setEachTime('.input-start', startTime);
-            setEachTime('.input-end', endTime);
-            setEachTime('.input-break', breakTime);
-            setEachTime('.input-over', overTime);
-            
-            console.log($('.form-action').attr('action', '/userwork/create'));
-            
-        });
-    }
-    function setEachTime(objectName, time)
-    {
-        $(objectName).each(function() {
-            $(this).val(time);
-        });
-
-    }
-};
+  $('.bulk-input').on('click', function () {
+    $('.start-time').each(function (){
+      $(this).val($('[name=bulk-start-time').val());
+    });
+    $('.end-time').each(function () {
+      $(this).val($('[name=bulk-end-time').val());
+    })
+    $('.over-time').each(function () {
+      $(this).val($('[name=bulk-over-time').val());
+    })
+    $('.break-time').each(function () {
+      $(this).val($('[name=bulk-break-time').val());
+    })
+  })
+}
 </script>

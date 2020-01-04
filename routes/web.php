@@ -21,7 +21,12 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/userwork/index', 'UserWorkController@index');
-Route::get('/userwork/list', 'UserWorkController@list');
-Route::post('/userwork/create', 'UserWorkController@create');
-Route::post('/userwork/update', 'UserWorkController@update');
+Route::namespace('Web\UserWork\Controllers')->group(function() {
+    Route::group(['prefix' => '/userwork'], function() {
+        Route::get('', 'ListUserWorkController');
+        Route::get('{id}', 'IndexUserWorkController');
+        Route::post('', 'CreateUserWorkController');
+        Route::post('/download', 'DownloadUserWorkController');
+        Route::put('', 'UpdateUserWorkController');
+    });
+});
