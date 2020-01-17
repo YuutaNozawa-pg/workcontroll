@@ -18,8 +18,8 @@ class UpdateUserWorkController extends Controller
 
     public function __invoke(UpdateUserWorkRequest $request)
     {
-        $response = $this->updateUserWorkService->execute();
+        $response = $this->updateUserWorkService->execute($request->convert());
         
-        return view('userwork.Update', ['userWorkUpdate' => $response]);
+        return redirect('/userwork');
     }
 }

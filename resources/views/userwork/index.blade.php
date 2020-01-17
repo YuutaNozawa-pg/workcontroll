@@ -2,7 +2,7 @@
 
 @section('content')
   <div class="float-left">
-    現在の年月：{{ $userWorkList->date->format('Y年m月') }}
+    このシートの：{{ $userWorkList->date->format('Y年m月') }}
   </div>
 
   <form action="/userwork/download" method="POST" class="m-0">
@@ -43,6 +43,8 @@
     @method('PUT')
     @csrf
 
+    <input type="hidden" value={{ $userWorkList->id }} name="user_work_list_id">
+
     <button type="submit" class="btn btn-primary float-right mr-3">更新</button>
 
     <div class="table-responsive">
@@ -61,10 +63,10 @@
             <tr>
               <input class="userwork-id" type="hidden" name="id[]" value="{{ $userWork->id }}">
               <td>{{ $userWork->day }}</td>
-              <td><input class="start-time" type="text" name="start_time[]" value=""></td>
-              <td><input class="end-time" type="text" name="end_time[]" value=""></td>
-              <td><input class="break-time" type="text" name="break_time[]" value=""></td>
-              <td><input class="over-time" type="text" name="over_time[]" value=""></td>
+              <td><input class="start-time" type="text" name="start_time[]" value="{{ $userWork->start_time }}"></td>
+              <td><input class="end-time" type="text" name="end_time[]" value="{{ $userWork->end_time }}"></td>
+              <td><input class="break-time" type="text" name="break_time[]" value="{{ $userWork->break_time }}"></td>
+              <td><input class="over-time" type="text" name="over_time[]" value="{{ $userWork->over_time }}"></td>
             </tr>
             @endforeach
           </tbody>
