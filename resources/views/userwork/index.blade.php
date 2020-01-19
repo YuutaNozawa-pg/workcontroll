@@ -2,12 +2,12 @@
 
 @section('content')
   <div class="float-left">
-    このシートの：{{ $userWorkList->date->format('Y年m月') }}
+      {{ $userWorkList->date->format('Y年m月') }}分
   </div>
 
   <form action="/userwork/download" method="POST" class="m-0">
     @csrf
-    <button type="submit" class="btn btn-primary float-right">CSV</button>
+    <button type="submit" class="csv-download btn btn-primary float-right">CSV</button>
   </form>
   
   <button type="button" class="btn btn-primary float-right mr-3" data-toggle="modal" data-target="#modal1">
@@ -78,6 +78,19 @@
 
 <script>
 window.onload = function () {
+
+  $('.csv-download').on('click', function() {
+    $(this).after($('.userwork-id').clone());
+    $(this).after($('.start-time').clone());
+    $(this).after($('.end-time').clone());
+    $(this).after($('.break-time').clone());
+    $(this).after($('.over-time').clone());
+
+    $(this).siblings('.start-time').attr('type', 'hidden');
+    $(this).siblings('.end-time').attr('type', 'hidden');
+    $(this).siblings('.break-time').attr('type', 'hidden');
+    $(this).siblings('.over-time').attr('type', 'hidden');
+  });
 
   $('.bulk-input').on('click', function () {
     $('.start-time').each(function (){
