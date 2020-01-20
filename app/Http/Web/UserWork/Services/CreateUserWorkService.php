@@ -8,6 +8,7 @@ use Carbon\Carbon;
 
 class CreateUserWorkService
 {
+    //日付を指定して何年何月分のデータを作成出来るようにする
     public function execute()
     {
         //取得
@@ -27,7 +28,7 @@ class CreateUserWorkService
             }
         }
 
-        //作成
+        //作成 //user_idを使ってデータを作成したいが...
         $userWorkList = (new UserWorkList())->newQuery()
             ->create([
                 'user_id' => 0,

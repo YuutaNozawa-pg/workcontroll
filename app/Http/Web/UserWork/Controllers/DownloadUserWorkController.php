@@ -19,6 +19,7 @@ class DownloadUserWorkController extends Controller
     public function __invoke(DownloadUserWorkRequest $request)
     {
         $fileName = Carbon::now();
+        
         $fileName = str_replace(['-', ':', ' '], ['', '', ''], $fileName) . '.csv';
 
         $csvData = [
@@ -29,20 +30,30 @@ class DownloadUserWorkController extends Controller
             'over_time' => $request->input('over_time')
         ];
 
+        //カンマ区切りでキーを登録
         Storage::put($fileName, implode(',', array_keys($csvData)));
 
         $data = '';
+
+        //idの数だけ回す(28~31回分)
         foreach ($csvData['id'] as $arrayKey => $arrayValue) {
+            //5回回す
             foreach ($csvData as $key => $value) {
                 $conma = ',';
-                if ($key == 'over_time') {
-                    $conma = '';
+                //最後の要素にカンマは付けないで\nを入れる
+                if ($key === array_key_last($csvData)) {
+                    $conma = "\n";
                 }
+
+                if (!preg_match('/[0-9]{2}:[0-9]{2}/', $csvData[$key][$arrayKey]) || $csvData[$key][$arrayKey] === null) {
+                    $csvData[$key][$arrayKey] = "00:00";
+                }
+
                 $data .= $csvData[$key][$arrayKey] . $conma;
             }
-            Storage::append($fileName, $data);
-            $data = '';
         }
+
+        Storage::append($fileName, $data);
 
         return Storage::disk('local')->download($fileName);
     }
