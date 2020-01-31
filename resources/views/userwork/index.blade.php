@@ -1,8 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+
   <div class="float-left">
-      {{ $userWorkList->date->format('Y年m月') }}分
+    {{ $userWorkList->date->format('Y年m月') }}分
   </div>
 
   <form action="/userwork/download" method="POST" class="m-0">
